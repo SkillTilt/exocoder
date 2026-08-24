@@ -109,6 +109,13 @@ environment:
     PIP_PROGRESS_BAR: 'off'
     TQDM_DISABLE: '1'
 model:
+  model_name: "hosted_vllm/mlx-community/Olmo-3-7B-Instruct-4bit"
+  model_class: "litellm"
+  cost_tracking: "ignore_errors"
+  model_kwargs:
+    drop_params: true          # keep — already there
+    api_base: "http://localhost:8080/v1"
+    temperature: 0.0
   observation_template: |
     {%- if output.output | length < 10000 -%}
     {
@@ -147,5 +154,3 @@ model:
     If you want to end the task, please issue the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`
     without any other command.
     {%- endif %}
-  model_kwargs:
-    drop_params: true

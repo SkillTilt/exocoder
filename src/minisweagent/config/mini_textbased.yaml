@@ -112,6 +112,13 @@ environment:
     PIP_PROGRESS_BAR: 'off'
     TQDM_DISABLE: '1'
 model:
+  model_name: "hosted_vllm/mlx-community/Olmo-3-7B-Instruct-4bit"
+  model_class: "litellm_textbased"
+  cost_tracking: "ignore_errors"
+  model_kwargs:
+    drop_params: true          # keep — already there
+    api_base: "http://localhost:8080/v1"
+    temperature: 0.0
   observation_template: |
     {% if output.exception_info -%}
     <exception>{{output.exception_info}}</exception>
@@ -140,8 +147,6 @@ model:
     {{ output.output[-5000:] }}
     </output_tail>
     {%- endif -%}
-  model_kwargs:
-    drop_params: true
   format_error_template: |
     {% if finish_reason is defined and finish_reason in ["length", "tool_calls"] -%}
     Your previous response reached the output token limit (finish_reason={{ finish_reason }}) before you produced a complete action, so it was cut off. Respond more concisely and provide exactly one action in the required format. If you need to think more, do so briefly.
